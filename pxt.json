@@ -1,10 +1,9 @@
 {
-    "name": "Untitled",
+    "name": "oled",
     "version": "0.1.0",
     "description": "",
     "dependencies": {
-        "circuit-playground": "*",
-        "oled": "github:jrichau/pxt-oled#32d6e9d4bc38699a1f3f6ecaca54a4f3bdcdcb2a"
+        "circuit-playground": "*"
     },
     "files": [
         "main.ts",
