@@ -2,10 +2,10 @@
     "name": "Untitled",
     "description": "",
     "dependencies": {
-        "circuit-playground": "*"
+        "circuit-playground": "*",
+        "oled": "github:jrichau/pxt-oled#32d6e9d4bc38699a1f3f6ecaca54a4f3bdcdcb2a"
     },
     "files": [
-        "main.blocks",
         "main.ts",
         "README.md"
     ],
@@ -19,5 +19,5 @@
     "supportedTargets": [
         "adafruit"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
