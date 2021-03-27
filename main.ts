@@ -287,18 +287,18 @@ namespace OLED_I2C {
     /**
      * show a number in OLED
      * @param x is X alis, eg: 0
-     * @param y is Y alis, eg: 0
      * @param num is the number will be show, eg: 12
      * @param color is number color, eg: 1
      */
-    //% blockId="OLED_I2C_NUMBER" block="show a Number at x %x|y %y|number %num|color %color"
+    //% blockId="OLED_I2C_NUMBER" block="show a Number at x %x|number %num|color %color"
     //% weight=80 blockGap=8
     //% parts=OLED_I2C trackArgs=0
-    export function showNumber(x: number, y: number, num: number, color: number = 1) {
-        drawNumber(num)
+    export function showNumber(x: number, num: number, color: number = 1) {
+        clear()
+        drawNumber(num, x)
         //showString(x, y, num.toString(), color)
     }
-    function drawNumber(n: number) {
+    function drawNumber(n: number, slot: number) {
         let x = n % 10
         let segments: Array<number> = []
         switch (x) {
@@ -330,21 +330,22 @@ namespace OLED_I2C {
                 segments = [0,1,2,3,4,5,6]
                 break
             case 9:
-                segments = [0,1,2,3,4,5,6]
+                segments = [0,1,3,5,6]
                 break
         }
         for(let i = 0; i < segments.length; i++) {
-            drawSegment(i,0)
+            drawSegment(segments[i], slot)
         }   
     }
     function drawSegment(s: number, slot: number) {
         if (s < 3) {
             let yOffset = 13 * s
-            hline(5,0 + yOffset,8)
-            hline(4,1 + yOffset,10)
-            hline(3,2 + yOffset,12)
-            hline(4,3 + yOffset,10)
-            hline(5,4 + yOffset,8)
+            let xOffset = slot * 20
+            hline(5 + xOffset, 0 + yOffset,8)
+            hline(4 + xOffset, 1 + yOffset,10)
+            hline(3 + xOffset, 2 + yOffset,12)
+            hline(4 + xOffset, 3 + yOffset,10)
+            hline(5 + xOffset, 4 + yOffset,8)
         } else {
             let xOffset = 0
             let yOffset = 0
@@ -352,7 +353,7 @@ namespace OLED_I2C {
                 yOffset = 13
             }
             if ( s == 5 || s == 6) {
-                xOffset = 13
+                xOffset = 13 + slot * 20
             }
             vline(0 + xOffset, 5 + yOffset, 8)
             vline(1 + xOffset, 4 + yOffset, 10)
