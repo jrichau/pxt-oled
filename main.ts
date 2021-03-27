@@ -295,16 +295,40 @@ namespace OLED_I2C {
     //% weight=80 blockGap=8
     //% parts=OLED_I2C trackArgs=0
     export function showNumber(x: number, y: number, num: number, color: number = 1) {
-        drawSegment()
+        drawSegment(0,0)
+        drawSegment(1,0)
+        drawSegment(2,0)
+        drawSegment(3,0)
+        drawSegment(4,0)
+        drawSegment(5,0)
+        drawSegment(6,0)
         //showString(x, y, num.toString(), color)
     }
     
-    function drawSegment() {
-        hline(5,0,8)
-        hline(4,1,10)
-        hline(3,2,12)
-        hline(4,3,10)
-        hline(5,4,8)
+    function drawSegment(s: number, slot: number) {
+        if (s < 3) {
+            let yOffset = 13 * s
+            hline(5,0 + yOffset,8)
+            hline(4,1 + yOffset,10)
+            hline(3,2 + yOffset,12)
+            hline(4,3 + yOffset,10)
+            hline(5,4 + yOffset,8)
+        } else {
+            let xOffset = 0
+            let yOffset = 0
+            if (s == 4 || s == 6) {
+                yOffset = 13
+            }
+            if ( s == 5 || s == 6) {
+                xOffset = 13
+            }
+            vline(0 + xOffset, 5 + yOffset, 8)
+            vline(1 + xOffset, 4 + yOffset, 10)
+            vline(2 + xOffset, 3 + yOffset, 12)
+            vline(3 + xOffset, 4 + yOffset, 10)
+            vline(4 + xOffset, 5 + yOffset, 8)
+        }
+
     }
     /**
      * draw a horizontal line
