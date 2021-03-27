@@ -196,18 +196,7 @@ namespace OLED_I2C {
         _screen[0] = 0x40
         draw()
     }
-    /**
-     * clear screen
-     */
-    //% blockId="OLED_I2C_FIRST_PIXEL" block="firstPixel"
-    //% weight=63 blockGap=8
-    //% parts=OLED_I2C trackArgs=0
-    export function firstPixel() {
-        _screen.fill(0)
-        _screen[1] = 0xFF
-        _screen[0] = 0x40
-        draw()
-    }
+
     /**
      * turn on screen
      */
@@ -296,22 +285,33 @@ namespace OLED_I2C {
     }
 
     /**
-     * show a number in OLED
-     * @param x is X alis, eg: 0
+     * show a number in OLED, can show up to 6 digits
      * @param num is the number will be show, eg: 12
      * @param color is number color, eg: 1
      */
     //% blockId="OLED_I2C_NUMBER" block="show a Number at x %x|number %num|color %color"
     //% weight=80 blockGap=8
     //% parts=OLED_I2C trackArgs=0
-    export function showNumber(x: number, num: number, color: number = 1) {
+    export function showNumber(num: number, color: number = 1) {
         _screen.fill(0)
         _screen[0] = 0x40
-        for(let i = 0; i< 6; i++) {
-            drawNumber(num, i)
+        if (num > 99999) {
+            drawNumber(Math.floor(num / 100000), 0)
         }
+        if (num > 9999) {
+            drawNumber(Math.floor(num / 10000), 1)
+        }
+        if (num > 999) {
+            drawNumber(Math.floor(num / 1000), 2)
+        }
+        if (num > 99) {
+            drawNumber(Math.floor(num / 100), 3)
+        }
+        if (num > 9) {
+            drawNumber(Math.floor(num / 10), 4)
+        }
+        drawNumber(num % 10, 5)
         draw()
-        //showString(x, y, num.toString(), color)
     }
     function pixelBuf(x: number, y: number, color: number = 1) {
         let page = y >> 3
