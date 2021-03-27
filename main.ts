@@ -295,9 +295,47 @@ namespace OLED_I2C {
     //% weight=80 blockGap=8
     //% parts=OLED_I2C trackArgs=0
     export function showNumber(x: number, y: number, num: number, color: number = 1) {
-        showString(x, y, num.toString(), color)
+        drawSegment()
+        //showString(x, y, num.toString(), color)
     }
     
+    function drawSegment() {
+        hline(5,0,8)
+        hline(4,1,10)
+        hline(3,2,12)
+        hline(4,3,10)
+        hline(5,4,8)
+    }
+    /**
+     * draw a horizontal line
+     * @param x is X alis, eg: 0
+     * @param y is Y alis, eg: 0
+     * @param len is the length of line, eg: 10
+     * @param color is line color, eg: 1
+     */
+    //% blockId="OLED_I2C_HLINE" block="draw a horizontal line at x %x|y %y|number %len|color %color"
+    //% weight=71 blockGap=8
+    //% parts=OLED_I2C trackArgs=0
+    export function hline(x: number, y: number, len: number, color: number = 1) {
+        for (let i = x; i < (x + len); i++)
+            pixel(i, y, color)
+    }
+
+    /**
+     * draw a vertical line
+     * @param x is X alis, eg: 0
+     * @param y is Y alis, eg: 0
+     * @param len is the length of line, eg: 10
+     * @param color is line color, eg: 1
+     */
+    //% blockId="OLED_I2C_VLINE" block="draw a vertical line at x %x|y %y|number %len|color %color"
+    //% weight=72 blockGap=8
+    //% parts=OLED_I2C trackArgs=0
+    export function vline(x: number, y: number, len: number, color: number = 1) {
+        for (let i = y; i < (y + len); i++)
+            pixel(x, i, color)
+    }
+
     /**
      * OLED initialize
      * @param addr is i2c addr, eg: 60
