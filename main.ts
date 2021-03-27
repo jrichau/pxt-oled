@@ -295,16 +295,48 @@ namespace OLED_I2C {
     //% weight=80 blockGap=8
     //% parts=OLED_I2C trackArgs=0
     export function showNumber(x: number, y: number, num: number, color: number = 1) {
-        drawSegment(0,0)
-        drawSegment(1,0)
-        drawSegment(2,0)
-        drawSegment(3,0)
-        drawSegment(4,0)
-        drawSegment(5,0)
-        drawSegment(6,0)
+        drawNumber(num)
         //showString(x, y, num.toString(), color)
     }
-    
+    function drawNumber(n: number) {
+        let x = n % 10
+        let segments: Array<number> = []
+        switch (x) {
+            case 0:
+                segments = [0,2,3,4,5,6]
+                break
+            case 1:
+                segments = [5,6]
+                break
+            case 2:
+                segments = [0,1,2,4,5]
+                break
+            case 3:
+                segments = [0,1,2,5,6]
+                break
+            case 4:
+                segments = [1,3,5,6]
+                break
+            case 5:
+                segments = [0,1,2,3,6]
+                break
+            case 6:
+                segments = [0,1,2,3,4,6]
+                break
+            case 7:
+                segments = [0,5,6]
+                break
+            case 8:
+                segments = [0,1,2,3,4,5,6]
+                break
+            case 9:
+                segments = [0,1,2,3,4,5,6]
+                break
+        }
+        for(let i = 0; i < segments.length; i++) {
+            drawSegment(i,0)
+        }   
+    }
     function drawSegment(s: number, slot: number) {
         if (s < 3) {
             let yOffset = 13 * s
