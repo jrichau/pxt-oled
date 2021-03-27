@@ -196,7 +196,18 @@ namespace OLED_I2C {
         _screen[0] = 0x40
         draw()
     }
-
+    /**
+     * clear screen
+     */
+    //% blockId="OLED_I2C_FIRST_PIXEL" block="firstPixel"
+    //% weight=63 blockGap=8
+    //% parts=OLED_I2C trackArgs=0
+    export function firstPixel() {
+        _screen.fill(0)
+        _screen[1] = 0xFF
+        _screen[0] = 0x40
+        draw()
+    }
     /**
      * turn on screen
      */
@@ -294,9 +305,20 @@ namespace OLED_I2C {
     //% weight=80 blockGap=8
     //% parts=OLED_I2C trackArgs=0
     export function showNumber(x: number, num: number, color: number = 1) {
-        clear()
-        drawNumber(num, x)
+        _screen.fill(0)
+        _screen[0] = 0x40
+        for(let i = 0; i< 6; i++) {
+            drawNumber(num, i)
+        }
+        draw()
         //showString(x, y, num.toString(), color)
+    }
+    function pixelBuf(x: number, y: number, color: number = 1) {
+        let page = y >> 3
+        let shift_page = y % 8
+        let ind = x + page * 128 + 1
+        let b = (color) ? (_screen[ind] | (1 << shift_page)) : clrbit(_screen[ind], shift_page)
+        _screen[ind] = b
     }
     function drawNumber(n: number, slot: number) {
         let x = n % 10
@@ -337,17 +359,26 @@ namespace OLED_I2C {
             drawSegment(segments[i], slot)
         }   
     }
+    function hlinebuf(x: number, y: number, len: number, color: number = 1) {
+        for (let i = x; i < (x + len); i++)
+            pixelBuf(i, y, color)
+
+    }
+    function vlinebuf(x: number, y: number, len: number, color: number = 1) {
+        for (let i = y; i < (y + len); i++)
+            pixelBuf(x, i, color)
+    }
     function drawSegment(s: number, slot: number) {
         if (s < 3) {
             let yOffset = 13 * s
             let xOffset = slot * 20
-            hline(5 + xOffset, 0 + yOffset,8)
-            hline(4 + xOffset, 1 + yOffset,10)
-            hline(3 + xOffset, 2 + yOffset,12)
-            hline(4 + xOffset, 3 + yOffset,10)
-            hline(5 + xOffset, 4 + yOffset,8)
+            hlinebuf(5 + xOffset, 0 + yOffset,8)
+            hlinebuf(4 + xOffset, 1 + yOffset,10)
+            hlinebuf(3 + xOffset, 2 + yOffset,12)
+            hlinebuf(4 + xOffset, 3 + yOffset,10)
+            hlinebuf(5 + xOffset, 4 + yOffset,8)
         } else {
-            let xOffset = 0
+            let xOffset = slot * 20
             let yOffset = 0
             if (s == 4 || s == 6) {
                 yOffset = 13
@@ -355,13 +386,12 @@ namespace OLED_I2C {
             if ( s == 5 || s == 6) {
                 xOffset = 13 + slot * 20
             }
-            vline(0 + xOffset, 5 + yOffset, 8)
-            vline(1 + xOffset, 4 + yOffset, 10)
-            vline(2 + xOffset, 3 + yOffset, 12)
-            vline(3 + xOffset, 4 + yOffset, 10)
-            vline(4 + xOffset, 5 + yOffset, 8)
+            vlinebuf(0 + xOffset, 5 + yOffset, 8)
+            vlinebuf(1 + xOffset, 4 + yOffset, 10)
+            vlinebuf(2 + xOffset, 3 + yOffset, 12)
+            vlinebuf(3 + xOffset, 4 + yOffset, 10)
+            vlinebuf(4 + xOffset, 5 + yOffset, 8)
         }
-
     }
     /**
      * draw a horizontal line
